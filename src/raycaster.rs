@@ -40,7 +40,7 @@ impl Default for Environment {
                 1, 1, 1, 1, 1, 1, 1,
             ],
             scale: 100.0,
-            wall_size: 5.0,
+            wall_size: 20.0,
             player: Player::default(),
         };
     }
@@ -91,11 +91,11 @@ impl Environment {
         let mut test = self.map.clone();
 
         // Total number of steps around fov angle
-        let total_horizontal_steps = 10;
+        let total_horizontal_steps = 100;
         for n in -total_horizontal_steps / 2..=total_horizontal_steps / 2 {
             let n_float = n as f64;
             // Total number of steps until hit or end of map
-            for d in 1..10 {
+            for d in 1..100 {
                 let d_float = d as f64;
 
                 let angle = (fov_rad / 2.0) * (n as f64 / total_horizontal_steps as f64);
@@ -114,6 +114,9 @@ impl Environment {
                     continue;
                 }
 
+                let x_pos = image_size[0] / 2.0
+                    + image_size[0] * (n as f64) / (total_horizontal_steps as f64);
+
                 let map_index: usize = (pos_new.1 + self.size() * pos_new.0) as usize;
                 if self.map[map_index] != 0 {
                     let projected_wall_height =
@@ -122,10 +125,10 @@ impl Environment {
                     piston_window::rectangle(
                         [1.0, 0.0, 0.0, 1.0],
                         [
-                            pos_new_f.0 * 30.0 - projected_wall_height / 2.0,
+                            x_pos - projected_wall_height / 2.0,
                             image_size[1] / 2.0 - projected_wall_height / 2.0,
-                            projected_wall_height / 2.0,
-                            projected_wall_height / 2.0,
+                            projected_wall_height,
+                            projected_wall_height,
                         ],
                         context.transform.scale(
                             window_size[0] / image_size[0] as f64,
