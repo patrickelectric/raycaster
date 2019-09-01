@@ -5,6 +5,7 @@ use std::vec::Vec;
 
 pub struct Player {
     pub pos: (f64, f64),
+    pub angle: f64,
     fov: f64,
     projection_plane_distance: f64,
 }
@@ -13,6 +14,7 @@ impl Default for Player {
     fn default() -> Player {
         return Player {
             pos: (350.0, 350.0),
+            angle: 0.0,
             fov: 135.0,
             projection_plane_distance: 10.0,
         };
@@ -98,8 +100,8 @@ impl Environment {
                 let angle = (fov_rad / 2.0) * (n as f64 / total_horizontal_steps as f64);
                 let d_float = d as f64;
                 let pos_new_f = (
-                    (pos_scaled.0 + d_float * angle.cos()),
-                    (pos_scaled.1 + d_float * angle.sin()),
+                    (pos_scaled.0 + d_float * angle.cos()) * self.player.angle.cos(),
+                    (pos_scaled.1 + d_float * angle.sin()) * self.player.angle.sin(),
                 );
                 let real_distance = pos_new_f.0.hypot(pos_new_f.1);
                 let pos_new = (pos_new_f.0.round() as u64, pos_new_f.1.round() as u64);
@@ -169,5 +171,9 @@ impl Environment {
 
     pub fn move_player(&mut self, delta: (f64, f64)) {
         self.player.pos = (self.player.pos.0 + delta.0, self.player.pos.1 + delta.1);
+    }
+
+    pub fn rotate_player(&mut self, angle: f64) {
+        self.player.angle += angle;
     }
 }

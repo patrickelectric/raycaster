@@ -48,6 +48,12 @@ fn main() {
                 Button::Keyboard(Key::A) => {
                     environment.move_player((0.0, -1.0));
                 }
+                Button::Keyboard(Key::Q) => {
+                    environment.rotate_player(0.1);
+                }
+                Button::Keyboard(Key::E) => {
+                    environment.rotate_player(-0.1);
+                }
                 _ => {}
             }
             println!("{:#?}", environment.player.pos);
