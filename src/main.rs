@@ -8,9 +8,10 @@ mod raycaster;
 fn main() {
     let (width, height) = (320, 240);
 
+    let opengl_version = OpenGL::V4_2;
     let mut window: PistonWindow = WindowSettings::new(env!("CARGO_PKG_NAME"), [width, height])
         .exit_on_esc(true)
-        .graphics_api(OpenGL::V4_2)
+        .graphics_api(opengl_version)
         .build()
         .unwrap();
 
@@ -28,7 +29,7 @@ fn main() {
 
     // Patrick
     let mut environment = raycaster::Environment::default();
-    environment.draw(&mut texture);
+    //environment.draw(&mut texture);
 
     // The window event loop.
     window.set_lazy(true);
@@ -37,13 +38,14 @@ fn main() {
             //println!("{:#?}", mouse_pos);
         });
 
-        let size = window.size();
-        window.draw_2d(&event, |context, graphics, _| {
+        window.draw_2d(&event, |mut context, mut graphics, _| {
+            let size = context.viewport.unwrap().window_size;
+            environment.draw(&mut context, &mut graphics);
             image(
                 &texture,
                 context
                     .transform
-                    .scale(size.width / width as f64, size.height / height as f64),
+                    .scale(size[0] / width as f64, size[1] / height as f64),
                 graphics,
             );
         });

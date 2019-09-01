@@ -1,5 +1,6 @@
 extern crate piston_window;
 
+use crate::piston_window::Transformed;
 use std::vec::Vec;
 
 pub struct Player {
@@ -68,7 +69,15 @@ impl From<(usize, usize)> for (u32, u32) {
 */
 
 impl Environment {
-    pub fn draw(&mut self, texture: &mut piston_window::G2dTexture) {
+    pub fn draw(
+        &mut self,
+        context: &mut piston_window::Context,
+        graphics: &mut piston_window::G2d,
+    ) {
+        println!("viewport {:#?}", context.viewport);
+        let window_size = context.viewport.unwrap().window_size;
+        let image_size = [320.0, 400.0];
+
         // Fov in radians
         let fov_rad: f64 = self.player.fov * std::f64::consts::PI / 180.0;
         // Only rectangles for now
@@ -90,10 +99,12 @@ impl Environment {
                 let d_float = d as f64;
 
                 let angle = (fov_rad / 2.0) * (n as f64 / total_horizontal_steps as f64);
-                let pos_new = (
-                    (pos_scaled.0 + d_float * angle.cos()).round() as u64,
-                    (pos_scaled.1 + d_float * angle.sin()).round() as u64,
+                let pos_new_f = (
+                    (pos_scaled.0 + d_float * angle.cos()),
+                    (pos_scaled.1 + d_float * angle.sin()),
                 );
+                let pos_new = (pos_new_f.0.round() as u64, pos_new_f.1.round() as u64);
+
                 // Check for invalid values
                 if pos_new.0 < 0
                     || pos_new.1 < 0
@@ -107,7 +118,21 @@ impl Environment {
                 if self.map[map_index] != 0 {
                     let projected_wall_height =
                         self.wall_size * self.player.projection_plane_distance / d_float;
-                    println!("{:#?}, {}: {}", pos_new, angle, projected_wall_height);
+                    println!("> {:#?}, {}: {}", pos_new_f, angle, projected_wall_height);
+                    piston_window::rectangle(
+                        [1.0, 0.0, 0.0, 1.0],
+                        [
+                            pos_new_f.0 * 30.0 - projected_wall_height / 2.0,
+                            image_size[1] / 2.0 - projected_wall_height / 2.0,
+                            projected_wall_height / 2.0,
+                            projected_wall_height / 2.0,
+                        ],
+                        context.transform.scale(
+                            window_size[0] / image_size[0] as f64,
+                            window_size[1] / image_size[1] as f64,
+                        ),
+                        graphics,
+                    );
                     break;
                 }
                 /*
