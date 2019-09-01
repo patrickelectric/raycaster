@@ -74,7 +74,6 @@ impl Environment {
         context: &mut piston_window::Context,
         graphics: &mut piston_window::G2d,
     ) {
-        println!("viewport {:#?}", context.viewport);
         let window_size = context.viewport.unwrap().window_size;
         let image_size = [320.0, 400.0];
 
