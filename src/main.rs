@@ -33,6 +33,10 @@ fn main() {
     // The window event loop.
     window.set_lazy(true);
     while let Some(event) = window.next() {
+        MouseCursorEvent::mouse_cursor(&event, |mouse_pos| {
+            //println!("{:#?}", mouse_pos);
+        });
+
         let size = window.size();
         window.draw_2d(&event, |context, graphics, _| {
             image(
