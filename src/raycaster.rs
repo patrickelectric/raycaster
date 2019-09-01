@@ -96,13 +96,13 @@ impl Environment {
             let n_float = n as f64;
             // Total number of steps until hit or end of map
             for d in 1..100 {
-                let d_float = d as f64;
-
                 let angle = (fov_rad / 2.0) * (n as f64 / total_horizontal_steps as f64);
+                let d_float = d as f64;
                 let pos_new_f = (
                     (pos_scaled.0 + d_float * angle.cos()),
                     (pos_scaled.1 + d_float * angle.sin()),
                 );
+                let real_distance = pos_new_f.0.hypot(pos_new_f.1);
                 let pos_new = (pos_new_f.0.round() as u64, pos_new_f.1.round() as u64);
 
                 // Check for invalid values
@@ -120,8 +120,8 @@ impl Environment {
                 let map_index: usize = (pos_new.1 + self.size() * pos_new.0) as usize;
                 if self.map[map_index] != 0 {
                     let projected_wall_height =
-                        self.wall_size * self.player.projection_plane_distance / d_float;
-                    println!("> {:#?}, {}: {}", pos_new_f, angle, projected_wall_height);
+                        self.wall_size * self.player.projection_plane_distance / real_distance;
+                    //println!("> {:#?}, {}: {}", pos_new_f, angle, projected_wall_height);
                     piston_window::rectangle(
                         [1.0, 0.0, 0.0, 1.0],
                         [
