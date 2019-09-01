@@ -21,6 +21,7 @@ impl Default for Player {
 pub struct Environment {
     map: Vec<u64>,
     scale: f64,
+    wall_size: f64,
     player: Player,
 }
 
@@ -38,6 +39,7 @@ impl Default for Environment {
                 1, 1, 1, 1, 1, 1, 1,
             ],
             scale: 100.0,
+            wall_size: 5.0,
             player: Player::default(),
         };
     }
@@ -101,6 +103,13 @@ impl Environment {
                     continue;
                 }
 
+                let map_index: usize = (pos_new.1 + self.size() * pos_new.0) as usize;
+                if self.map[map_index] != 0 {
+                    let projected_wall_height =
+                        self.wall_size * self.player.projection_plane_distance / d_float;
+                    println!("{:#?}, {}: {}", pos_new, angle, projected_wall_height);
+                    break;
+                }
                 /*
                 let map_pos: usize = (pos_new.1 + self.size() * pos_new.0) as usize;
                 self.map[map_pos] = 3;
