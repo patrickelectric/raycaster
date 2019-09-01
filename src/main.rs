@@ -27,7 +27,7 @@ fn main() {
     .unwrap();
 
     // Patrick
-    let environment = raycaster::Environment::default();
+    let mut environment = raycaster::Environment::default();
     environment.draw(&mut texture);
 
     // The window event loop.

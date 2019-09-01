@@ -43,6 +43,19 @@ impl Default for Environment {
     }
 }
 
+impl std::fmt::Display for Environment {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let size = (self.map.len() as f64).sqrt() as usize;
+        for u in 0..size {
+            for i in 0..size {
+                write!(f, "\t{}, ", self.map[u * size + i]);
+            }
+            write!(f, "\n");
+        }
+        write!(f, "----")
+    }
+}
+
 /*
 use std::convert::From;
 impl From<(usize, usize)> for (u32, u32) {
@@ -53,21 +66,54 @@ impl From<(usize, usize)> for (u32, u32) {
 */
 
 impl Environment {
-    pub fn draw(&self, texture: &mut piston_window::G2dTexture) {
+    pub fn draw(&mut self, texture: &mut piston_window::G2dTexture) {
         // Fov in radians
         let fov_rad: f64 = self.player.fov * std::f64::consts::PI / 180.0;
         // Only rectangles for now
         let cell_size = self.scale / self.size() as f64;
+        // Scaled position
+        let pos_scaled = (
+            self.player.pos.0 / self.scale,
+            self.player.pos.1 / self.scale,
+        );
+
+        let mut test = self.map.clone();
 
         // Total number of steps around fov angle
-        for n in -5..=5 {
+        let total_horizontal_steps = 10;
+        for n in -total_horizontal_steps / 2..=total_horizontal_steps / 2 {
             let n_float = n as f64;
             // Total number of steps until hit or end of map
             for d in 1..10 {
                 let d_float = d as f64;
 
-                //let new_pos = ((n_float*fov/10.0).cos()*d_float, (n_float*fov/10.0).sin()*d_float);
-                //println!("{:#?}", new_pos);
+                let angle = (fov_rad / 2.0) * (n as f64 / total_horizontal_steps as f64);
+                let pos_new = (
+                    (pos_scaled.0 + d_float * angle.cos()).round() as u64,
+                    (pos_scaled.1 + d_float * angle.sin()).round() as u64,
+                );
+                // Check for invalid values
+                if pos_new.0 < 0
+                    || pos_new.1 < 0
+                    || pos_new.0 >= self.size()
+                    || pos_new.1 >= self.size()
+                {
+                    continue;
+                }
+
+                /*
+                let map_pos: usize = (pos_new.1 + self.size() * pos_new.0) as usize;
+                self.map[map_pos] = 3;
+                println!("{:}", self);
+                */
+
+                /*
+                println!("> {:#?}", (pos_new.1 + self.size() * pos_new.0) as usize);
+                println!("{:#?}", pos_new);
+                println!(
+                    "{:#?}",
+                    self.map[(pos_new.1 + self.size() * pos_new.0) as usize]
+                );*/
             }
         }
     }
