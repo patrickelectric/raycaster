@@ -34,11 +34,31 @@ fn main() {
     // The window event loop.
     window.set_lazy(true);
     while let Some(event) = window.next() {
+        ButtonEvent::button(&event, |button_args| {
+            match button_args.button {
+                Button::Keyboard(Key::W) => {
+                    environment.move_player((1.0, 0.0));
+                }
+                Button::Keyboard(Key::S) => {
+                    environment.move_player((-1.0, 0.0));
+                }
+                Button::Keyboard(Key::D) => {
+                    environment.move_player((0.0, 1.0));
+                }
+                Button::Keyboard(Key::A) => {
+                    environment.move_player((0.0, -1.0));
+                }
+                _ => {}
+            }
+            println!("{:#?}", environment.player.pos);
+        });
+
         MouseCursorEvent::mouse_cursor(&event, |mouse_pos| {
             //println!("{:#?}", mouse_pos);
         });
 
         window.draw_2d(&event, |mut context, mut graphics, _| {
+            clear([0.0, 0.0, 0.0, 1.0], graphics);
             let size = context.viewport.unwrap().window_size;
             environment.draw(&mut context, &mut graphics);
             image(

@@ -4,7 +4,7 @@ use crate::piston_window::Transformed;
 use std::vec::Vec;
 
 pub struct Player {
-    pos: (f64, f64),
+    pub pos: (f64, f64),
     fov: f64,
     projection_plane_distance: f64,
 }
@@ -23,7 +23,7 @@ pub struct Environment {
     map: Vec<u64>,
     scale: f64,
     wall_size: f64,
-    player: Player,
+    pub player: Player,
 }
 
 #[rustfmt::skip::macros(vec)]
@@ -166,5 +166,9 @@ impl Environment {
 
     pub fn size(&self) -> u64 {
         return (self.map.len() as f64).sqrt() as u64;
+    }
+
+    pub fn move_player(&mut self, delta: (f64, f64)) {
+        self.player.pos = (self.player.pos.0 + delta.0, self.player.pos.1 + delta.1);
     }
 }
