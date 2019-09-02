@@ -3,6 +3,7 @@ extern crate piston_window;
 use crate::piston_window::Transformed;
 use std::vec::Vec;
 
+#[derive(Debug)]
 pub struct Player {
     pub pos: (f64, f64),
     pub angle: f64,
