@@ -37,22 +37,22 @@ fn main() {
         ButtonEvent::button(&event, |button_args| {
             match button_args.button {
                 Button::Keyboard(Key::W) => {
-                    environment.move_player((1.0, 0.0));
+                    environment.move_player((3.0, 0.0));
                 }
                 Button::Keyboard(Key::S) => {
-                    environment.move_player((-1.0, 0.0));
+                    environment.move_player((-3.0, 0.0));
                 }
                 Button::Keyboard(Key::D) => {
-                    environment.move_player((0.0, 1.0));
+                    environment.move_player((0.0, 3.0));
                 }
                 Button::Keyboard(Key::A) => {
-                    environment.move_player((0.0, -1.0));
+                    environment.move_player((0.0, -3.0));
                 }
                 Button::Keyboard(Key::Q) => {
-                    environment.rotate_player(0.1);
+                    environment.rotate_player(0.01);
                 }
                 Button::Keyboard(Key::E) => {
-                    environment.rotate_player(-0.1);
+                    environment.rotate_player(-0.01);
                 }
                 _ => {}
             }
