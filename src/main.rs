@@ -74,6 +74,7 @@ fn main() {
                     .scale(size[0] / width as f64, size[1] / height as f64),
                 graphics,
             );
+            environment.draw_mini_map(&mut context, &mut graphics);
         });
     }
 }

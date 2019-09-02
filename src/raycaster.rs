@@ -156,6 +156,66 @@ impl Environment {
         }
     }
 
+    pub fn draw_mini_map(
+        &mut self,
+        context: &mut piston_window::Context,
+        graphics: &mut piston_window::G2d,
+    ) {
+        let window_size = context.viewport.unwrap().window_size;
+        let image_size = [320.0, 400.0];
+        let mini_map_rect = [image_size[0]*0.8, 0.0, image_size[0]*0.2, image_size[1]*0.2];
+        piston_window::rectangle(
+            [1.0, 1.0, 1.0, 1.0],
+            mini_map_rect,
+            context.transform.scale(
+                window_size[0] / image_size[0] as f64,
+                window_size[1] / image_size[1] as f64,
+            ),
+            graphics,
+        );
+
+        for cell in 0..self.map.len() {
+            if self.map[cell] == 0 {
+                continue;
+            }
+
+            let size = self.size();
+            let x = (cell as u64 % size) as f64;
+            let y = (cell as f64 / size as f64).floor() as f64;
+            let mini_cell_size = (
+                (mini_map_rect[2]/size as f64) as f64,
+                (mini_map_rect[3]/size as f64) as f64,
+            );
+
+            piston_window::rectangle(
+                [1.0, 0.0, 0.0, 1.0],
+                [
+                    mini_map_rect[0] + mini_cell_size.0*x, mini_map_rect[1] + mini_cell_size.1*y, mini_cell_size.0, mini_cell_size.1
+                ],
+                context.transform.scale(
+                    window_size[0] / image_size[0] as f64,
+                    window_size[1] / image_size[1] as f64,
+                ),
+                graphics,
+            );
+            let pos_scale = (
+                self.player.pos.0*image_size[0]/(self.size() as f64* self.scale),
+                self.player.pos.1*image_size[1]/(self.size() as f64* self.scale)
+            );
+            piston_window::rectangle(
+                [0.0, 0.0, 1.0, 1.0],
+                [
+                    mini_map_rect[0] + pos_scale.0*0.2 - 2.0, pos_scale.1*0.2 - 2.0, 4.0, 4.0
+                ],
+                context.transform.scale(
+                    window_size[0] / image_size[0] as f64,
+                    window_size[1] / image_size[1] as f64,
+                ),
+                graphics,
+            );
+        }
+    }
+
     pub fn set_map(&mut self, map: Vec<u64>) {
         self.map = map.clone();
     }
