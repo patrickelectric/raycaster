@@ -125,7 +125,7 @@ impl Environment {
                         self.wall_size * self.player.projection_plane_distance / real_distance;
                     //println!("> {:#?}, {}: {}", pos_new_f, angle, projected_wall_height);
                     piston_window::rectangle(
-                        [1.0, 0.0, 0.0, 1.0],
+                        [1.0-(real_distance as f32)/8.0, 0.0, 0.0, 1.0],
                         [
                             x_pos - projected_wall_height / 2.0,
                             image_size[1] / 2.0 - projected_wall_height / 2.0,
