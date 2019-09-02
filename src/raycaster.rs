@@ -101,8 +101,8 @@ impl Environment {
                 let angle = (fov_rad / 2.0) * (n as f64 / total_horizontal_steps as f64);
                 let d_float = d as f64;
                 let pos_new_f = (
-                    (pos_scaled.0 + d_float * angle.cos()) * self.player.angle.cos(),
-                    (pos_scaled.1 + d_float * angle.sin()) * self.player.angle.sin(),
+                    pos_scaled.0 + d_float * (angle + self.player.angle).cos(),
+                    pos_scaled.1 + d_float * (angle +self.player.angle).sin(),
                 );
                 let real_distance = pos_new_f.0.hypot(pos_new_f.1);
                 let pos_new = (pos_new_f.0.round() as u64, pos_new_f.1.round() as u64);
