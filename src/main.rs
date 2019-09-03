@@ -49,10 +49,10 @@ fn main() {
                     environment.move_player((0.0, -3.0));
                 }
                 Button::Keyboard(Key::Q) => {
-                    environment.rotate_player(0.01);
+                    environment.rotate_player(-0.01);
                 }
                 Button::Keyboard(Key::E) => {
-                    environment.rotate_player(-0.01);
+                    environment.rotate_player(0.01);
                 }
                 _ => {}
             }
