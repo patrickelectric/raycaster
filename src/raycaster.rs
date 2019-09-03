@@ -16,7 +16,7 @@ impl Default for Player {
         return Player {
             pos: (350.0, 350.0),
             angle: 0.0,
-            fov: 135.0,
+            fov: 60.0,
             projection_plane_distance: 15.0,
         };
     }
