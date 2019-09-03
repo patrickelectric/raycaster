@@ -1,6 +1,7 @@
 extern crate piston_window;
 
 use crate::piston_window::Transformed;
+use std::num;
 use std::vec::Vec;
 
 #[derive(Debug)]
@@ -214,7 +215,50 @@ impl Environment {
             piston_window::rectangle(
                 [0.0, 0.0, 1.0, 1.0],
                 [
-                    mini_map_rect[0] + pos_scale.0*0.2 - 2.0, pos_scale.1*0.2 - 2.0, 4.0, 4.0
+                    mini_map_rect[0] + pos_scale.0 * 0.2 - 2.0,
+                    pos_scale.1 * 0.2 - 2.0,
+                    4.0,
+                    4.0,
+                ],
+                context.transform.scale(
+                    window_size[0] / image_size[0] as f64,
+                    window_size[1] / image_size[1] as f64,
+                ),
+                graphics,
+            );
+
+            let min_player_pos = [mini_map_rect[0] + pos_scale.0 * 0.2, pos_scale.1 * 0.2];
+            piston_window::rectangle(
+                [0.0, 0.0, 1.0, 1.0],
+                [min_player_pos[0] - 2.0, min_player_pos[1] - 2.0, 4.0, 4.0],
+                context.transform.scale(
+                    window_size[0] / image_size[0] as f64,
+                    window_size[1] / image_size[1] as f64,
+                ),
+                graphics,
+            );
+
+            // Vision
+            piston_window::polygon(
+                [0.0, 1.0, 0.0, 1.0],
+                &[
+                    [min_player_pos[0], min_player_pos[1]],
+                    [
+                        min_player_pos[0]
+                            + mini_map_rect[2] * (self.player.angle + self.player.fov / 2.0).cos()
+                                / 3.0,
+                        min_player_pos[1]
+                            + mini_map_rect[3] * (self.player.angle + self.player.fov / 2.0).sin()
+                                / 3.0,
+                    ],
+                    [
+                        min_player_pos[0]
+                            + mini_map_rect[2] * (self.player.angle - self.player.fov / 2.0).cos()
+                                / 3.0,
+                        min_player_pos[1]
+                            + mini_map_rect[3] * (self.player.angle - self.player.fov / 2.0).sin()
+                                / 3.0,
+                    ],
                 ],
                 context.transform.scale(
                     window_size[0] / image_size[0] as f64,
