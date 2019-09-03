@@ -231,7 +231,14 @@ impl Environment {
     }
 
     pub fn move_player(&mut self, delta: (f64, f64)) {
-        self.player.pos = (self.player.pos.0 + delta.0*self.player.angle.cos(), self.player.pos.1 + delta.1*self.player.angle.sin());
+        self.player.pos = (
+            self.player.pos.0
+                + delta.0 * self.player.angle.cos()
+                + delta.1 * self.player.angle.sin(),
+            self.player.pos.1
+                + delta.0 * self.player.angle.sin()
+                + delta.1 * self.player.angle.cos(),
+        );
         println!("{:#?}", self.player);
     }
 
